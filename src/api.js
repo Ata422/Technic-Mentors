@@ -1,11 +1,13 @@
 const express = require("express");
-// const serverless = require('serverless-http');
+const serverless = require('serverless-http');
+const connectToMongo = require('./db')
+connectToMongo()
 const User = require("../Schema/User")
 const Post = require("../Schema/Post")
 const Category = require("../Schema/Category")
 const JWT_SECRET = "habibisagoodb#oy";
 const multer = require('multer')
-// const app = express();
+const app = express();
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
@@ -166,4 +168,6 @@ router.get("/getusers/:id", async (req, res) => {
   }
 });
 
-module.exports = router
+app.use('/.netlify/functions/api', router)
+
+module.exports.handler = serverless(app)
